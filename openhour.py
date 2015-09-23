@@ -82,12 +82,15 @@ def display():
     else:
         openingHours = session.get('openingHours', {})
 
-    displayOpeningHours = copy.deepcopy(openingHours)
+    displayOpeningHours = OrderedDict(sorted(
+        copy.deepcopy(openingHours).items(), key=lambda t: t[0]))
 
     period = {}
     for k in openingHours:
         flag = 0
         period[k] = list(GroupRanges(openingHours[k]))
+
+    period = OrderedDict(sorted(period.items(), key=lambda t: t[0]))
 
     for k in period:
         flag = 0
