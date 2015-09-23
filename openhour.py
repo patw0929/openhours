@@ -2,10 +2,13 @@ from flask import Flask, render_template, request, redirect, url_for, session
 app = Flask(__name__)
 app.secret_key = '|\\V\xc9*\xa9\xc1;]\x03\xecH/Y\x9d\xeeu\xab:t\x96\x8f$\x8b'
 
+from collections import OrderedDict
+
 import decimal
 import random
 import json
 import numpy
+import copy
 
 
 def format_number(num):
@@ -77,9 +80,9 @@ def display():
             '2': [0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 8, 8.5, 9]
         }
     else:
-        openingHours = session['openingHours']
+        openingHours = session.get('openingHours', {})
 
-    displayOpeningHours = dict(openingHours)
+    displayOpeningHours = copy.deepcopy(openingHours)
 
     period = {}
     for k in openingHours:
@@ -128,8 +131,6 @@ def display():
                     displayOpeningHours['7'] = sorted(
                         list(set(displayOpeningHours['7'])))
 
-    print displayOpeningHours
-
     result = {}
     for k in displayOpeningHours:
         result[k] = []
@@ -142,9 +143,7 @@ def display():
 
             result[k].append(_convert_float_time(i) + "~" + _convert_float_time(j).replace("00:00", "24:00"))
 
-    from collections import OrderedDict
     result = OrderedDict(sorted(result.items(), key=lambda t: t[0]))
-    print result
 
     return render_template("views.html",
                            result=result)
@@ -154,7 +153,7 @@ def display():
 def form():
     if request.method == 'POST':
         try:
-            openingHours = request.form['data']
+            openingHours = request.form.get('data')
             session['openingHours'] = dict(json.loads(openingHours))
             return '1'
         except:
@@ -163,9 +162,42 @@ def form():
 
     prefilledData = {}
     if 'openingHours' in session:
-        prefilledData = session['openingHours']
+        prefilledData = session.get('openingHours', {})
 
-    return render_template("form.html", prefilledData=prefilledData)
+    period = OrderedDict(sorted({
+        '1': [],
+        '2': [],
+        '3': [],
+        '4': [],
+        '5': [],
+        '6': [],
+        '7': []
+        }.items(), key=lambda t: t[0]))
+    result = OrderedDict(sorted({
+        '1': [],
+        '2': [],
+        '3': [],
+        '4': [],
+        '5': [],
+        '6': [],
+        '7': []
+        }.items(), key=lambda t: t[0]))
+
+    for k in prefilledData:
+        flag = 0
+        period[k] = sorted(list(set(prefilledData[k])))
+        period[k] = list(GroupRanges(period[k]))
+        result[k] = []
+        for i, j in period[k]:
+            if i > 24:
+                i -= 24
+            if j > 24:
+                j -= 24
+
+            result[k].append(_convert_float_time(i) + "~" +
+                             _convert_float_time(j).replace("00:00", "24:00"))
+
+    return render_template("form.html", prefilledData=result)
 
 
 if __name__ == '__main__':
