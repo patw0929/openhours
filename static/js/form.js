@@ -225,7 +225,7 @@ $(function (){
   // ============================
   // timepicker onchange handler
   // ============================
-  $(".timepicker-start").on("change", function (e) {
+  $(".weekday").on("change", ".timepicker-start", function (e) {
     var result = e.target.value;
     $(this).parent().find(".timepicker-end").html(generateTimePeriod(+result + 0.5, false));
   });
