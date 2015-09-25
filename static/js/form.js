@@ -288,7 +288,15 @@ $(function (){
   // generate final JSON
   // ============================
   $(".js-submit").on("click", function (e) {
-    var timePeriodObj = {};
+    var timePeriodObj = {
+      '1': [],
+      '2': [],
+      '3': [],
+      '4': [],
+      '5': [],
+      '6': [],
+      '7': []
+    };
     var weekdayTimePeriod;
     var url = $(".form").data("url");
 
