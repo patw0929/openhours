@@ -323,7 +323,6 @@ $(function (){
     // ===================================
     var tmpArr = [];
     for (var w = 1, wmax = 8; w <= wmax; w++) {
-      console.log(w);
       if (tmpArr.length > 0) {
         tmpArr.push(24);
         for (var i = 0, m = tmpArr.length; i < m; i++) {
@@ -332,22 +331,23 @@ $(function (){
 
         if (w === 8) {
           timePeriodObj[1] = uniq(timePeriodObj[1].concat(tmpArr).sort(sortNumber));
-          break;
         } else {
           timePeriodObj[w] = uniq(timePeriodObj[w].concat(tmpArr).sort(sortNumber));
         }
         tmpArr = [];
       }
 
-      for (var s = 0, max = timePeriodObj[w].length; s < max; s++) {
-        if (timePeriodObj[w][s] > 24) {
-          tmpArr.push(timePeriodObj[w][s]);
+      if (w < 8) {
+        for (var s = 0, max = timePeriodObj[w].length; s < max; s++) {
+          if (timePeriodObj[w][s] > 24) {
+            tmpArr.push(timePeriodObj[w][s]);
+          }
         }
-      }
 
-      timePeriodObj[w] = $.grep(timePeriodObj[w], function (value) {
-        return tmpArr.indexOf(value) === -1;
-      });
+        timePeriodObj[w] = $.grep(timePeriodObj[w], function (value) {
+          return tmpArr.indexOf(value) === -1;
+        });
+      }
     }
     // console.log(timePeriodObj);
 
