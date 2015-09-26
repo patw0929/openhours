@@ -1,6 +1,4 @@
 from flask import Flask, render_template, request, redirect, url_for, session
-app = Flask(__name__)
-app.secret_key = '|\\V\xc9*\xa9\xc1;]\x03\xecH/Y\x9d\xeeu\xab:t\x96\x8f$\x8b'
 
 from collections import OrderedDict
 
@@ -9,6 +7,9 @@ import random
 import json
 import numpy
 import copy
+
+app = Flask(__name__)
+app.secret_key = '|\\V\xc9*\xa9\xc1;]\x03\xecH/Y\x9d\xeeu\xab:t\x96\x8f$\x8b'
 
 
 def format_number(num):
@@ -107,8 +108,8 @@ def display():
                         flag += 1
 
                 if flag == 2:
-                    displayOpeningHours[k] = sorted(list(set(openingHours[k]).difference(
-                                                    tmpArr)))
+                    displayOpeningHours[k] = sorted(
+                        list(set(openingHours[k]).difference(tmpArr)))
 
                     tmpArr[:] = [x + 24 for x in tmpArr]
                     displayOpeningHours[str(int(k) - 1)].extend(tmpArr)
@@ -126,8 +127,8 @@ def display():
                         flag += 1
 
                 if flag == 2:
-                    displayOpeningHours[k] = sorted(list(set(openingHours[k]).difference(
-                                                    tmpArr)))
+                    displayOpeningHours[k] = sorted(
+                        list(set(openingHours[k]).difference(tmpArr)))
 
                     tmpArr[:] = [x + 24 for x in tmpArr]
                     displayOpeningHours['7'].extend(tmpArr)
@@ -144,7 +145,8 @@ def display():
             if j > 24:
                 j -= 24
 
-            result[k].append(_convert_float_time(i) + "~" + _convert_float_time(j).replace("00:00", "24:00"))
+            result[k].append(_convert_float_time(i) + "~" +
+                             _convert_float_time(j).replace("00:00", "24:00"))
 
     result = OrderedDict(sorted(result.items(), key=lambda t: t[0]))
 
