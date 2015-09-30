@@ -115,25 +115,26 @@ def display():
                     displayOpeningHours[str(int(k) - 1)].extend(tmpArr)
                     displayOpeningHours[str(int(k) - 1)] = sorted(
                         list(set(displayOpeningHours[str(int(k) - 1)])))
-        elif int(k) == 1:
-            if '7' in period:
-                for i, j in period['7']:
-                    if j == 24:
-                        flag += 1
 
-                for m, n in period[k]:
-                    if m == 0 and n < 12:
-                        tmpArr = numpy.arange(m, n + 0.5, 0.5)
-                        flag += 1
+    if '7' in period:
+        flag = 0
+        for i, j in period['7']:
+            if j == 24:
+                flag += 1
 
-                if flag == 2:
-                    displayOpeningHours[k] = sorted(
-                        list(set(openingHours[k]).difference(tmpArr)))
+        for m, n in period['1']:
+            if m == 0 and n < 12:
+                tmpArr = numpy.arange(m, n + 0.5, 0.5)
+                flag += 1
 
-                    tmpArr[:] = [x + 24 for x in tmpArr]
-                    displayOpeningHours['7'].extend(tmpArr)
-                    displayOpeningHours['7'] = sorted(
-                        list(set(displayOpeningHours['7'])))
+        if flag == 2:
+            displayOpeningHours['1'] = sorted(
+                list(set(openingHours['1']).difference(tmpArr)))
+
+            tmpArr[:] = [x + 24 for x in tmpArr]
+            displayOpeningHours['7'].extend(tmpArr)
+            displayOpeningHours['7'] = sorted(
+                list(set(displayOpeningHours['7'])))
 
     result = {}
     for k in displayOpeningHours:
